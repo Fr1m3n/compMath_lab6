@@ -43,5 +43,12 @@ object InputUtils {
     readDouble()
   }
 
+  def requestFunction(functions: Array[FunctionObject]): FunctionObject = {
+    println("Выберите функцию:")
+    functions.indices
+      .foreach(i => println(f"$i. ${functions(i).str}"))
+    functions(requestInt("Введите номер выбранной функции: "))
+  }
+
 
 }

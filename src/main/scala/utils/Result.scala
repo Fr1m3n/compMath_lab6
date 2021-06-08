@@ -1,11 +1,12 @@
 package utils
 
 import com.github.sh0hei.mascalade.tableflip.TableFlip
-import methods.InterpolationMethod
+import methods.Method
 
 class Result(val functionObject: FunctionObject,
-             val table: Array[(Double, Double)],
-             val methodName: String,
+             val result: Array[(Double, Double)],
+             val method: Method,
+             val R: Double,
              val extraInfo: Array[(String, String)] = Array.empty,
              val coefficients: Map[String, Double] = Map.empty) {
 

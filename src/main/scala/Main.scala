@@ -1,25 +1,32 @@
-import methods.{LagrangeMethod, NewtonMethod}
+import methods.{ModifiedEulerMethod, MilnMethod}
 import utils.Result
 import utils._
 
-
 object Main extends App {
-  val methods = Array(
-    new LagrangeMethod(),
-    new NewtonMethod()
+
+  val functions = Array(
+    new FunctionObject((x, y) => 2 * x * y, "y' = 2xy", x => Math.exp(x * x)),
+    new FunctionObject((x, y) => 2 * x - y + x * x, "y' = 2x - y + x^2", x => x * x),
+    new FunctionObject((x, y) => Math.pow(x - y, 2) + 1, "y' = (x - y) ^ 2 + 1", x => x)
   )
 
-  val table = InputUtils.readFunctionTable()
-  val x0 = InputUtils.requestDouble("x0: ")
-  val interpolations = methods
-    .map((method) => new FunctionObject(method.findInterpolation(table), method.methodName))
-//  val f = methods(1).findInterpolation(table)
-//  val f2 = methods(0).findInterpolation(table)
-//  println(f(x0))
-  interpolations.foreach((f) => {
-    println(f"${f.str} x0 = $x0: ${f.f(x0)}")
-  })
-  ChartWriter.drawChartForFunctions(interpolations, table)
+  val methods = Array(
+    new ModifiedEulerMethod,
+    new MilnMethod
+  )
+
+  val choosenFunction = InputUtils.requestFunction(functions)
+
+  val range = (InputUtils.requestDouble("Введите левую границу: "), InputUtils.requestDouble("Введите правую границу: "))
+
+  val y0 = InputUtils.requestDouble(f"y(${range._1}) = ")
+  val h = InputUtils.requestDouble(("h = "))
+  val eps = InputUtils.requestDouble("e = ")
+
+  
+  val res = methods.map((m) => (m.solve(choosenFunction, range, h, eps, y0), m.methodName))
+  ChartWriter.drawChartForFunctions(Array(choosenFunction), res, range)
+  // ChartWriter.drawChartForFunctions(interpolations, table)
 //  interpolations.foreach((f) => ChartWriter.drawChartForFunctions(Array(f), table))
 
 //  val array: Array[Result] = methods.flatMap(m => m.findInterpolation(table)).sortBy(_.s)

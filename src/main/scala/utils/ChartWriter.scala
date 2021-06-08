@@ -17,31 +17,35 @@ object ChartWriter extends App {
 
     def drawChartForFunction(figure: Figure,
                              function: FunctionObject,
-                             table: Array[(Double, Double)],
+                             range: (Double, Double),
                              subplot: Int = 0,
                              color: String=null): Unit = {
-        val p = figure.subplot(2, 2, subplot)
+        val p = figure.subplot(subplot)
         p.legend = true
-        val xLin = linspace(table.map(_._1).min - MARGIN, table.map(_._1).max + MARGIN)
-        p += plot(xLin, xLin.map(xi => function.f(xi)), name = function.str)
+        val xLin = linspace(range._1, range._2)
+        p += plot(xLin, xLin.map(xi => function.solution(xi)), name = function.str)
         p.xlabel = "x axis"
         p.ylabel = "y axis"
         //        figure.saveas("plot.png")
     }
 
+    def drawChartForPoints(figure: Figure, points: Array[(Double, Double)], title: String = "title") = {
+        val p = figure.subplot(0)
+        p.legend = true
+        p += plot(points.map(_._1), points.map(_._2), name=title)
+    }
 
-    def drawChartForFunctions(functions: Array[FunctionObject], table: Array[(Double, Double)]) = {
+
+    def drawChartForFunctions(functions: Array[FunctionObject], table: Array[(Array[(Double, Double)], String)], range: (Double, Double)) = {
         val figure = Figure()
         val p = figure.subplot(0)
         p.legend = true
-        functions.indices.foreach((i) => {
-            drawChartForFunction(figure, functions(i), table, i)
-            drawPoints(figure.subplot(2, 2, i), table)
-        })
-
-        functions.foreach((f) => drawChartForFunction(figure, f, table, 2))
-        drawPoints(figure.subplot(2, 2, 2), table)
-        drawPoints(figure.subplot(2, 2, 3), table)
+        // functions.indices.foreach((i) => {
+        //     drawChartForFunction(figure, functions(i), table, i)
+        //     drawPoints(figure.subplot(2, 2, i), table)
+        // })
+        table.foreach(p => drawChartForPoints(figure, p._1, p._2))
+        functions.foreach((f) => drawChartForFunction(figure, f, range))
 //        figure.saveas("plot.png")
     }
 

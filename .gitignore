@@ -3,6 +3,10 @@ target/
 .idea/
 project/
 
+.metals/
+.vscode/
+.bloop/
+
 *.png
 
 temp/
