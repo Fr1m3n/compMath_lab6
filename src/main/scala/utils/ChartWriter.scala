@@ -36,7 +36,7 @@ object ChartWriter extends App {
     }
 
 
-    def drawChartForFunctions(functions: Array[FunctionObject], table: Array[(Array[(Double, Double)], String)], range: (Double, Double)) = {
+    def drawChartForFunctions(functions: Array[FunctionObject], result: Array[Result], range: (Double, Double)) = {
         val figure = Figure()
         val p = figure.subplot(0)
         p.legend = true
@@ -44,7 +44,7 @@ object ChartWriter extends App {
         //     drawChartForFunction(figure, functions(i), table, i)
         //     drawPoints(figure.subplot(2, 2, i), table)
         // })
-        table.foreach(p => drawChartForPoints(figure, p._1, p._2))
+        result.foreach(p => drawChartForPoints(figure, p.result, p.method.methodName))
         functions.foreach((f) => drawChartForFunction(figure, f, range))
 //        figure.saveas("plot.png")
     }

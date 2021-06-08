@@ -7,10 +7,9 @@ trait Method {
 
   def methodName: String
 
-  def solve(functionObject: FunctionObject, range: (Double, Double), h: Double, precission: Double, y0: Double): Result
+  def solve(functionObject: FunctionObject, range: (Double, Double), h: Double, precission: Double, y0: Double, needR: Boolean = true): Result
 
-  @scala.annotation.tailrec
-  def getP(precision: Double, accum: Int) = {
+  def getP(precision: Double, accum: Int = 0): Double = {
     if (precision >= 1.0) accum
     else getP(precision * 10, accum + 1)
   }

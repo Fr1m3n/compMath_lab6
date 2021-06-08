@@ -1,6 +1,7 @@
 package methods
 
 import utils.FunctionObject
+import utils.Result
 
 class MilnMethod extends Method {
    val methodName = "Метод Милна"
@@ -9,11 +10,10 @@ class MilnMethod extends Method {
         yi + h / 2 * (f(xi, yi) + f(xi1, yi + h * f(xi, yi)))
     }
 
-    def solve(functionObject: FunctionObject, range: (Double, Double), h: Double, precission: Double, y0: Double): Array[(Double, Double)] = {
-        var xyValues = new ModifiedEulerMethod().solve(functionObject, (range._1, range._1 + h * 3), h, precission, y0)
+    def solve(functionObject: FunctionObject, range: (Double, Double), h: Double, precission: Double, y0: Double, needR: Boolean = true): Result = {
+        var xyValues = new ModifiedEulerMethod().solve(functionObject, (range._1, range._1 + h * 3), h, precission, y0, needR=false).result
         var f: Array[Double] = Array()
         xyValues.foreach((a) => f = f.appended(functionObject.f(a._1, a._2)))
-        println(xyValues.length)
         var x = xyValues.last._1 + h
         while (x <= range._2) {
             
@@ -31,7 +31,9 @@ class MilnMethod extends Method {
 
             x = x + h
         }
+        val R = if (needR && xyValues.length > 2) (xyValues(2)._2 - solve(functionObject, range, h * 2, precission, y0, needR=false).result(2)._2) / (Math.pow(getP(precission), 4) - 1)
+        else 0.0
 
-        xyValues
+        new Result(functionObject, xyValues, this, R)
     }
 }
