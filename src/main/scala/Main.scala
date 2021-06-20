@@ -25,6 +25,7 @@ object Main extends App {
 
   
   val res = methods.map((m) => m.solve(choosenFunction, range, h, eps, y0))
+  res.foreach(m => println(m.toString()))
   ChartWriter.drawChartForFunctions(Array(choosenFunction), res, range)
   // ChartWriter.drawChartForFunctions(interpolations, table)
 //  interpolations.foreach((f) => ChartWriter.drawChartForFunctions(Array(f), table))

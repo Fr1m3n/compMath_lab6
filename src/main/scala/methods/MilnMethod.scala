@@ -15,8 +15,9 @@ class MilnMethod extends Method {
         var f: Array[Double] = Array()
         xyValues.foreach((a) => f = f.appended(functionObject.f(a._1, a._2)))
         var x = xyValues.last._1 + h
+        var steps: Array[Array[Double]] = Array()
+
         while (x <= range._2) {
-            
             var y_predicted = xyValues(xyValues.length - 4)._2 + 4 * h * (2 * f(0) - f(1) + 2 * f(3)) / 3
             var new_f = functionObject.f(x, y_predicted)
             var y_corrected = xyValues(xyValues.length - 2)._2 + h * (f(1) + 4 * f(2) + new_f) / 3
@@ -29,11 +30,13 @@ class MilnMethod extends Method {
             xyValues = xyValues.appended((x, y_predicted))
             f = f.drop(1).appended(new_f)
 
+            steps = steps.appended(Array(x, xyValues.last._2, functionObject.solution(x)))
+
             x = x + h
         }
         val R = if (needR && xyValues.length > 2) (xyValues(2)._2 - solve(functionObject, range, h * 2, precission, y0, needR=false).result(2)._2) / (Math.pow(getP(precission), 4) - 1)
         else 0.0
 
-        new Result(functionObject, xyValues, this, R)
+        Result(functionObject, xyValues, this, R, steps)
     }
 }
